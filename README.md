@@ -26,3 +26,8 @@ Build a segmented network to simulate real-world attacker and defender scenarios
 - Importance of least privilege
 - Visibility through logging
 - Common misconfigurations
+
+- ## Portfolio Use
+This project demonstrates practical network security, attack detection,
+and documentation skills relevant to SOC Analyst and Security+ roles.
+
