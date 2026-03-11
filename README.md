@@ -108,3 +108,15 @@ sudo iptables -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 This ensures that return traffic from allowed connections is not blocked.
 
 ![Established Connections Rule](screenshots/Firewall_established-connections_rules.png)
+
+## Allow Kali Attacker Network to Reach Server
+
+To simulate attacker behavior for testing purposes, traffic from the Kali attacker network was allowed to reach the Ubuntu server network.
+
+Command used:
+
+sudo iptables -A FORWARD -s 192.168.10.0/24 -d 192.168.20.0/24 -j ACCEPT
+
+This allows the attacker system to interact with the server during later attack simulations.
+
+![Allow Kali to Server](screenshots/allow_kali_to_server_rule.png)
