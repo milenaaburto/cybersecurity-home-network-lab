@@ -132,3 +132,21 @@ sudo iptables -A FORWARD -s 192.168.30.0/24 -d 192.168.20.0/24 -j ACCEPT
 This rule enables internal users to access services hosted on the server while still maintaining segmentation between network zones.
 
 ![Allow Internal to Server](screenshots/allow_internal_to_server_rule.png)
+
+## Firewall Segmentation Testing
+
+Connectivity tests were performed from the Kali attacker machine to validate firewall rules.
+
+### Kali → Server (Allowed)
+
+The attacker machine successfully communicated with the Ubuntu server network.
+
+This confirms the firewall rule allowing attacker network access to the server.
+
+### Kali → Internal Workstation (Blocked)
+
+The firewall blocked traffic from the attacker network to the internal workstation network.
+
+This demonstrates proper network segmentation and prevents attacker lateral movement.
+
+![Allow Internal to Server](screenshots/Firewall_segmentation_test.png)
