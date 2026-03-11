@@ -79,6 +79,5 @@ Verification command: cat /proc/sys/net/ipv4/ip_forward
 
 The output returned `1`, confirming that packet forwarding is active.
 
-![IP Forwarding Enabled](screenshots/ip_forward_enabled.png)
-
+![IP Forwarding Enabled](screenshots/Ip_forward_enable.png)
 
