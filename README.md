@@ -96,3 +96,15 @@ This ensures that traffic is blocked unless explicitly allowed.
 Verification:
 
 ![Default Firewall Policy](screenshots/default_firewall_policy.png)
+
+## Allowing Established Connections
+
+To maintain proper network communication, the firewall allows established and related connections.
+
+Command used:
+
+sudo iptables -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+
+This ensures that return traffic from allowed connections is not blocked.
+
+![Established Connections Rule](screenshots/firewall_established_connections_rule.png)
