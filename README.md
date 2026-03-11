@@ -81,3 +81,18 @@ The output returned `1`, confirming that packet forwarding is active.
 
 ![IP Forwarding Enabled](screenshots/Ip_forward_enable.png)
 
+## Default Firewall Policy
+
+The firewall was configured using a **default deny** security policy.
+
+Commands used:
+
+sudo iptables -P INPUT DROP
+sudo iptables -P FORWARD DROP
+sudo iptables -P OUTPUT ACCEPT
+
+This ensures that traffic is blocked unless explicitly allowed.
+
+Verification:
+
+![Default Firewall Policy](screenshots/default_firewall_policy.png)
