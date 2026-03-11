@@ -150,3 +150,53 @@ The firewall blocked traffic from the attacker network to the internal workstati
 This demonstrates proper network segmentation and prevents attacker lateral movement.
 
 ![Allow Internal to Server](screenshots/Firewall_segmentation_test.png)
+
+## Attacker Network Discovery
+
+The Kali attacker machine performed a network discovery scan against the server subnet.
+
+Command used:
+
+nmap -sn 192.168.20.0/24
+
+This scan identifies active hosts without performing port scans.
+
+Result:
+The Ubuntu server (192.168.20.10) was successfully discovered on the network.
+
+![Nmap Network Discovery](screenshots/nmap_network_discovery_scan.png)
+
+## Nmap SYN Port Scan
+
+A stealth SYN scan was performed from the Kali attacker machine against the Ubuntu server.
+
+Command used:
+
+nmap -sS 192.168.20.10
+
+Results showed that all scanned ports were closed, indicating that no services were currently exposed on the server.
+
+This demonstrates that even though the attacker can discover the host, the server is not currently exposing attackable services.
+
+![Nmap SYN Scan](screenshots/Nmap_port_scan_server.png)
+
+## Allowing Server Network Access Through Firewall
+
+During testing, the Ubuntu server could not reach the router or external networks due to firewall restrictions.
+
+To allow the server subnet to communicate with the router and initiate outbound connections, the following rules were added:
+
+sudo iptables -A INPUT -s 192.168.20.0/24 -j ACCEPT
+sudo iptables -A FORWARD -s 192.168.20.0/24 -j ACCEPT
+
+This allowed the server to access external resources such as DNS servers and Ubuntu repositories.
+
+## Enabling NAT for Internet Access
+
+To allow internal lab networks to access the internet through the firewall router, NAT masquerading was configured.
+
+Command used:
+
+sudo iptables -t nat -A POSTROUTING -o enp0s3 -j MASQUERADE
+
+This allows internal IP addresses to be translated to the router's external interface, enabling internet access for lab machines.
