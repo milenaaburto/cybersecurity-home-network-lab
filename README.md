@@ -164,7 +164,7 @@ This scan identifies active hosts without performing port scans.
 Result:
 The Ubuntu server (192.168.20.10) was successfully discovered on the network.
 
-![Nmap Network Discovery](screenshots/nmap_network_discovery_scan.png)
+![Nmap Network Discovery](screenshots/Nmap_network_discovery_scan.png)
 
 ## Nmap SYN Port Scan
 
