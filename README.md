@@ -107,4 +107,4 @@ sudo iptables -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 
 This ensures that return traffic from allowed connections is not blocked.
 
-![Established Connections Rule](screenshots/firewall_established_connections_rules.png)
+![Established Connections Rule](screenshots/Firewall_established_connections_rules.png)
