@@ -31,3 +31,41 @@ A topology diagram and IP addressing plan are included in the `diagrams/` direct
 ## Portfolio Use
 This project demonstrates practical network security, attack detection,
 and documentation skills relevant to SOC Analyst and Security+ roles.
+
+## Network Configuration Validation
+
+After configuring the segmented home network, connectivity tests were performed to verify correct routing between network segments.
+
+### Router Interface Configuration
+
+The firewall/router was configured with three interfaces connected to separate networks:
+
+- 192.168.10.0/24 – Attacker Network (Kali Linux)
+- 192.168.20.0/24 – Server Network (Ubuntu Server)
+- 192.168.30.0/24 – Internal Workstation (Fedora)
+
+![Network Topology](screenshots/Network_Topology.png)
+
+### Routing Table Verification
+
+The routing table confirms the router recognizes all configured subnets.
+
+![Routing Table](screenshots/Router_routing_table.png)
+
+### Attacker Network Test
+
+The Kali attacker machine successfully reached the Ubuntu server using ICMP.
+
+![Kali Ping Server](screenshots/Kali_ping_server.png)
+
+### Internal Network Test
+
+The Fedora workstation successfully reached the router gateway.
+
+![Fedora Gateway Ping](screenshots/Fedora_gateway_ping.png)
+
+### Router Connectivity Test
+
+The router successfully communicated with hosts across all three networks.
+
+![Router Connectivity Test](screenshots/Router_connectivity_test.png)
