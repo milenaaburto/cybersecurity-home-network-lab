@@ -120,3 +120,15 @@ sudo iptables -A FORWARD -s 192.168.10.0/24 -d 192.168.20.0/24 -j ACCEPT
 This allows the attacker system to interact with the server during later attack simulations.
 
 ![Allow Kali to Server](screenshots/allow_kali_to_server_rule.png)
+
+## Allow Internal Workstation Access to Server
+
+To allow legitimate internal access, the Fedora workstation network was allowed to communicate with the Ubuntu server network.
+
+Command used:
+
+sudo iptables -A FORWARD -s 192.168.30.0/24 -d 192.168.20.0/24 -j ACCEPT
+
+This rule enables internal users to access services hosted on the server while still maintaining segmentation between network zones.
+
+![Allow Internal to Server](screenshots/allow_internal_to_server_rule.png)
