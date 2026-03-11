@@ -69,3 +69,16 @@ The Fedora workstation successfully reached the router gateway.
 The router successfully communicated with hosts across all three networks.
 
 ![Router Connectivity Test](screenshots/Router_connectivity_test.png)
+
+## Enabling Packet Forwarding
+
+To allow the firewall-router to route traffic between the segmented networks, IPv4 forwarding was enabled.
+Command used: sudo sysctl -w net.ipv4.ip_forward=1
+Verification command: cat /proc/sys/net/ipv4/ip_forward
+
+
+The output returned `1`, confirming that packet forwarding is active.
+
+![IP Forwarding Enabled](screenshots/ip_forward_enabled.png)
+
+
