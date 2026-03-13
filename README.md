@@ -200,3 +200,33 @@ Command used:
 sudo iptables -t nat -A POSTROUTING -o enp0s3 -j MASQUERADE
 
 This allows internal IP addresses to be translated to the router's external interface, enabling internet access for lab machines.
+
+### Fixing Ubuntu Server Internet Connectivity
+
+During the lab setup, the Ubuntu Server was unable to access the internet and `apt update` failed with errors such as **"No route to host"** and **"Unable to connect to archive.ubuntu.com"**.
+
+Troubleshooting steps included:
+
+* Verifying routing configuration on the Ubuntu Server
+* Confirming the default gateway was set to the firewall router (`192.168.20.1`)
+* Ensuring IP forwarding was enabled on the router
+* Adding firewall forwarding rules to allow outbound traffic from the server network
+
+The following firewall rules were added on the router:
+
+```
+sudo iptables -A FORWARD -s 192.168.20.0/24 -o enp0s3 -j ACCEPT
+sudo iptables -A FORWARD -d 192.168.20.0/24 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+```
+
+Once the routing and firewall rules were corrected, the server successfully reached external IP addresses and `apt update` completed successfully.
+
+Apache was then installed to simulate a web service inside the lab environment.
+
+```
+sudo apt update
+sudo apt install apache2 -y
+```
+
+This prepares the Ubuntu Server to act as a target system for attacker reconnaissance and service enumeration.
+
