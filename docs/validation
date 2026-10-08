@@ -132,3 +132,20 @@ net.ipv4.ip_forward remained set to 1.
 - Clock alignment across all VMs remains to be verified before
   correlating timestamps from multiple systems.
 - These were authorized lab tests, not evidence of a real compromise.
+
+## Time Synchronization Limitation
+
+During validation, Firewall-Router reported a synchronized clock,
+while Ubuntu-Server reported an unsynchronized clock.
+
+A temporary NTP configuration and narrowly scoped firewall/NAT
+rules were tested. Ubuntu selected the intended NTP server but
+timed out waiting for replies. The underlying cause was not resolved.
+
+The temporary firewall/NAT rules were removed, and the Ubuntu
+configuration override was disabled.
+
+Existing logs remain useful for examining source and destination
+addresses, ports, HTTP responses, and firewall enforcement.
+However, precise cross-host event ordering cannot be established
+from their timestamps. No exact clock offset was measured.
