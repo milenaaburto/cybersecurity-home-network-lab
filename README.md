@@ -1,5 +1,21 @@
 # Cybersecurity Home Network Lab
 
+## Current Status
+
+The VirtualBox lab has been revalidated with HTTP access to the
+DMZ server and firewall enforcement against tested ICMP and TCP
+connections from the attacker and DMZ networks to the internal
+workstation.
+
+See [Network Segmentation Validation](docs/validation.md) for the
+current forwarding policy, test results, log analysis, persistence
+checks, and remaining limitations.
+
+**Documentation note:** The setup sections below describe earlier
+implementation stages, including broader firewall permissions and
+Internet-access configuration. They are retained as a historical
+record and do not represent the current validated ruleset.
+
 ## Objective
 Build a segmented network to simulate real-world attacker and defender scenarios.
 
