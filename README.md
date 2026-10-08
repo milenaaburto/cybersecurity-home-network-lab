@@ -1,253 +1,76 @@
 # Cybersecurity Home Network Lab
 
-## Current Status
+A VirtualBox lab demonstrating IPv4 network segmentation, firewall validation,
+and manual analysis of Linux firewall and Apache logs.
 
-The VirtualBox lab has been revalidated with HTTP access to the
-DMZ server and firewall enforcement against tested ICMP and TCP
-connections from the attacker and DMZ networks to the internal
-workstation.
-
-See [Network Segmentation Validation](docs/validation.md) for the
-current forwarding policy, test results, log analysis, persistence
-checks, and remaining limitations. See [SOC Analysis](docs/soc-analysis.md) for evidence interpretation,
-analyst conclusions, and limitations.
-
-**Documentation note:** The setup sections below describe earlier
-implementation stages, including broader firewall permissions and
-Internet-access configuration. They are retained as a historical
-record and do not represent the current validated ruleset.
+**Status:** Core segmentation tests completed; operational limitations remain
+documented. All test traffic was generated in an authorized lab environment.
 
 ## Objective
-Build a segmented network to simulate real-world attacker and defender scenarios.
+
+Permit HTTP access to a DMZ web server while blocking tested connections from
+the attacker and DMZ networks to the internal workstation. Evaluate the
+results using service availability checks, firewall counters, and logs.
+
+## Environment
+
+| System | Address | Role |
+|---|---|---|
+| Kali Linux | 192.168.10.10/24 | Attacker test host |
+| Ubuntu Server | 192.168.20.10/24 | DMZ web server running Apache |
+| Fedora | 192.168.30.10/24 | Internal workstation |
+| Ubuntu Firewall-Router | .1 gateway in each subnet | Routing, iptables filtering and logging |
+
+Each zone uses a separate VirtualBox internal network. Firewall-Router also
+has a VirtualBox NAT uplink; forwarded Internet access is not enabled in the
+final observed ruleset.
+
+See the [IP plan and interface mapping](diagrams/ip-addressing.md) for the
+VirtualBox implementation and the earlier Cisco Packet Tracer design.
+
+## Validated Results
+
+| Test | Result | Supporting evidence |
+|---|---|---|
+| Kali and Fedora to DMZ TCP/80 | HTTP 200 | Client responses; Apache records for Kali |
+| Kali and DMZ to internal ICMP | Blocked in tested paths | No replies and increasing DROP counters |
+| Kali and DMZ to internal TCP/8080 | Blocked in tested paths | Timeouts, SYN logs and increasing DROP counters |
+| Router to temporary internal TCP/8080 service | HTTP 200 | Service availability control |
+| Firewall reboot | Seven FORWARD rules restored; IPv4 forwarding enabled | Post-reboot verification |
+
+The temporary TCP/8080 service was stopped after testing. A timeout alone was
+not treated as proof of firewall enforcement.
+
+## Evidence and Analysis
+
+- [Network Segmentation Validation](docs/validation.md): current policy, test
+  results, screenshots, log-export inventory and persistence checks.
+- [SOC Analysis](docs/soc-analysis.md): evidence interpretation, analyst
+  disposition and investigation steps for similar activity outside a test.
+- [Security Policy](firewall-rules/security-policy.md): intended restrictions
+  and implementation scope.
+- [Setup History](docs/setup-history.md): earlier configuration steps and
+  troubleshooting, including historical rules that are no longer current.
+
+Raw log exports currently remain on the VMs. Repository evidence includes
+screenshots and written analysis; machine-readable exports are not yet published.
 
 ## Skills Demonstrated
-- Network segmentation
-- Firewall configuration
-- Traffic monitoring
-- Security testing
 
-## Lab Architecture
-The network architecture is documented using Cisco Packet Tracer.
-A topology diagram and IP addressing plan are included in the `diagrams/` directory.
-
-## Security Controls Implemented
-- Restricted network access
-- Firewall rules (iptables / ACLs)
-- Traffic inspection
-
-## Attack Simulation
-- Port scanning
-- ICMP blocking
-- Service enumeration
-
-## Lessons Learned
-- Importance of least privilege
-- Visibility through logging
-- Common misconfigurations
-
-## Portfolio Use
-This project demonstrates practical network security, attack detection,
-and documentation skills relevant to SOC Analyst and Security+ roles.
-
-## Network Configuration Validation
-
-After configuring the segmented home network, connectivity tests were performed to verify correct routing between network segments.
-
-### Router Interface Configuration
-
-The firewall/router was configured with three interfaces connected to separate networks:
-
-- 192.168.10.0/24 – Attacker Network (Kali Linux)
-- 192.168.20.0/24 – Server Network (Ubuntu Server)
-- 192.168.30.0/24 – Internal Workstation (Fedora)
-
-![Network Topology](screenshots/Network_Topology.png)
-
-### Routing Table Verification
-
-The routing table confirms the router recognizes all configured subnets.
-
-![Routing Table](screenshots/Router_routing_table.png)
-
-### Attacker Network Test
-
-The Kali attacker machine successfully reached the Ubuntu server using ICMP.
-
-![Kali Ping Server](screenshots/Kali_ping_server.png)
-
-### Internal Network Test
-
-The Fedora workstation successfully reached the router gateway.
-
-![Fedora Gateway Ping](screenshots/Fedora_gateway_ping.png)
-
-### Router Connectivity Test
-
-The router successfully communicated with hosts across all three networks.
-
-![Router Connectivity Test](screenshots/Router_connectivity_test.png)
-
-## Enabling Packet Forwarding
-
-To allow the firewall-router to route traffic between the segmented networks, IPv4 forwarding was enabled.
-Command used: sudo sysctl -w net.ipv4.ip_forward=1
-Verification command: cat /proc/sys/net/ipv4/ip_forward
-
-
-The output returned `1`, confirming that packet forwarding is active.
-
-![IP Forwarding Enabled](screenshots/Ip_forward_enable.png)
-
-## Default Firewall Policy
-
-The firewall was configured using a **default deny** security policy.
-
-Commands used:
-
-sudo iptables -P INPUT DROP
-sudo iptables -P FORWARD DROP
-sudo iptables -P OUTPUT ACCEPT
-
-This ensures that traffic is blocked unless explicitly allowed.
-
-Verification:
-
-![Default Firewall Policy](screenshots/default_firewall_policy.png)
-
-## Allowing Established Connections
-
-To maintain proper network communication, the firewall allows established and related connections.
-
-Command used:
-
-sudo iptables -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
-
-This ensures that return traffic from allowed connections is not blocked.
-
-![Established Connections Rule](screenshots/Firewall_established-connections_rules.png)
-
-## Allow Kali Attacker Network to Reach Server
-
-To simulate attacker behavior for testing purposes, traffic from the Kali attacker network was allowed to reach the Ubuntu server network.
-
-Command used:
-
-sudo iptables -A FORWARD -s 192.168.10.0/24 -d 192.168.20.0/24 -j ACCEPT
-
-This allows the attacker system to interact with the server during later attack simulations.
-
-![Allow Kali to Server](screenshots/allow_kali_to_server_rule.png)
-
-## Allow Internal Workstation Access to Server
-
-To allow legitimate internal access, the Fedora workstation network was allowed to communicate with the Ubuntu server network.
-
-Command used:
-
-sudo iptables -A FORWARD -s 192.168.30.0/24 -d 192.168.20.0/24 -j ACCEPT
-
-This rule enables internal users to access services hosted on the server while still maintaining segmentation between network zones.
-
-![Allow Internal to Server](screenshots/allow_internal_to_server_rule.png)
-
-## Firewall Segmentation Testing
-
-Connectivity tests were performed from the Kali attacker machine to validate firewall rules.
-
-### Kali → Server (Allowed)
-
-The attacker machine successfully communicated with the Ubuntu server network.
-
-This confirms the firewall rule allowing attacker network access to the server.
-
-### Kali → Internal Workstation (Blocked)
-
-The firewall blocked traffic from the attacker network to the internal workstation network.
-
-This demonstrates proper network segmentation and prevents attacker lateral movement.
-
-![Allow Internal to Server](screenshots/Firewall_segmentation_test.png)
-
-## Attacker Network Discovery
-
-The Kali attacker machine performed a network discovery scan against the server subnet.
-
-Command used:
-
-nmap -sn 192.168.20.0/24
-
-This scan identifies active hosts without performing port scans.
-
-Result:
-The Ubuntu server (192.168.20.10) was successfully discovered on the network.
-
-![Nmap Network Discovery](screenshots/Nmap_network_discovery_scan.png)
-
-## Nmap SYN Port Scan
-
-A stealth SYN scan was performed from the Kali attacker machine against the Ubuntu server.
-
-Command used:
-
-nmap -sS 192.168.20.10
-
-At this earlier setup stage, Nmap reported the scanned TCP ports
-as closed. This result applies only to those ports at the time of
-the scan; it does not establish the absence of vulnerabilities
-or other exposed services.
-
-Apache was installed later. The current validation confirms
-HTTP access on TCP/80.
-
-![Nmap SYN Scan](screenshots/Nmap_port_scan_server.png)
-
-## Allowing Server Network Access Through Firewall
-
-During testing, the Ubuntu server could not reach the router or external networks due to firewall restrictions.
-
-To allow the server subnet to communicate with the router and initiate outbound connections, the following rules were added:
-
-sudo iptables -A INPUT -s 192.168.20.0/24 -j ACCEPT
-sudo iptables -A FORWARD -s 192.168.20.0/24 -j ACCEPT
-
-This allowed the server to access external resources such as DNS servers and Ubuntu repositories.
-
-## Enabling NAT for Internet Access
-
-To allow internal lab networks to access the internet through the firewall router, NAT masquerading was configured.
-
-Command used:
-
-sudo iptables -t nat -A POSTROUTING -o enp0s3 -j MASQUERADE
-
-This allows internal IP addresses to be translated to the router's external interface, enabling internet access for lab machines.
-
-### Fixing Ubuntu Server Internet Connectivity
-
-During the lab setup, the Ubuntu Server was unable to access the internet and `apt update` failed with errors such as **"No route to host"** and **"Unable to connect to archive.ubuntu.com"**.
-
-Troubleshooting steps included:
-
-* Verifying routing configuration on the Ubuntu Server
-* Confirming the default gateway was set to the firewall router (`192.168.20.1`)
-* Ensuring IP forwarding was enabled on the router
-* Adding firewall forwarding rules to allow outbound traffic from the server network
-
-The following firewall rules were added on the router:
-
-```
-sudo iptables -A FORWARD -s 192.168.20.0/24 -o enp0s3 -j ACCEPT
-sudo iptables -A FORWARD -d 192.168.20.0/24 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
-```
-
-Once the routing and firewall rules were corrected, the server successfully reached external IP addresses and `apt update` completed successfully.
-
-Apache was then installed to simulate a web service inside the lab environment.
-
-```
-sudo apt update
-sudo apt install apache2 -y
-```
-
-This prepares the Ubuntu Server to act as a target system for attacker reconnaissance and service enumeration.
-
+- IPv4 subnetting, routing and network segmentation.
+- Stateful iptables forwarding rules and rate-limited logging.
+- Positive and negative connectivity tests with a service availability control.
+- Manual interpretation of firewall and Apache logs.
+- Evidence-based conclusions and explicit documentation of uncertainty.
+
+## Limitations and Follow-up
+
+- Ubuntu clock synchronization is unresolved; precise cross-host timestamp
+  correlation was not established.
+- Intermittent VM startup problems remain unresolved.
+- IPv6 filtering was not validated; router INPUT and OUTPUT remain ACCEPT.
+- Results cover the tested paths and protocols, not every possible attack.
+- This version does not include centralized SIEM ingestion or automated alerting.
+
+Follow-up work includes publishing reviewed log extracts and the exported
+final ruleset, plus a concise reproduction guide.
