@@ -86,6 +86,8 @@ Timeouts alone would not establish firewall enforcement.
 The conclusion is supported by the service availability control,
 matching firewall logs, and increases in the corresponding DROP counters.
 
+![TCP deny logs and saved firewall rules](../screenshots/tcp-deny-logs-and-saved-rules.png)
+
 ## Allowed HTTP Traffic: Apache Evidence
 
 After restoring access to Firewall-Router, Kali received HTTP 200
@@ -127,8 +129,9 @@ net.ipv4.ip_forward remained set to 1.
 - IPv6 filtering was not validated.
 - Earlier README NAT and Internet-access steps are historical;
   forwarded Internet access was not revalidated in this configuration.
-- Ubuntu Server was accessible through recovery boot; reliable normal
-  startup remains unresolved.
+- Ubuntu Server required recovery-mode troubleshooting earlier.
+  A subsequent normal boot succeeded, but intermittent VM startup
+  problems remain unresolved.
 - Clock alignment across all VMs remains to be verified before
   correlating timestamps from multiple systems.
 - These were authorized lab tests, not evidence of a real compromise.
