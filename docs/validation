@@ -86,6 +86,29 @@ Timeouts alone would not establish firewall enforcement.
 The conclusion is supported by the service availability control,
 matching firewall logs, and increases in the corresponding DROP counters.
 
+## Allowed HTTP Traffic: Apache Evidence
+
+After restoring access to Firewall-Router, Kali received HTTP 200
+from the DMZ web server at 192.168.20.10.
+
+Apache's access log recorded the request with these fields:
+
+- Source: 192.168.10.10 (Kali)
+- Request: HEAD / HTTP/1.1
+- Response status: 200
+- Reported User-Agent: curl/8.17.0
+- Server-recorded timestamp: 08/Oct/2026:17:37:42 +0000
+
+Four Kali access-log entries were exported to
+/home/webadmin/apache-kali-evidence.log on Ubuntu-Server.
+The raw export remains on the VM.
+
+This confirms application-level visibility of permitted HTTP traffic.
+The request was an authorized connectivity test, not evidence of
+malicious activity. Cross-system clock alignment remains unverified.
+
+![Apache access evidence](../screenshots/apache-kali-access-evidence.png)
+
 ## Persistence
 
 After rebooting Firewall-Router, verification confirmed that
