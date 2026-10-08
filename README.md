@@ -9,7 +9,8 @@ workstation.
 
 See [Network Segmentation Validation](docs/validation.md) for the
 current forwarding policy, test results, log analysis, persistence
-checks, and remaining limitations.
+checks, and remaining limitations. See [SOC Analysis](docs/soc-analysis.md) for evidence interpretation,
+analyst conclusions, and limitations.
 
 **Documentation note:** The setup sections below describe earlier
 implementation stages, including broader firewall permissions and
@@ -190,9 +191,13 @@ Command used:
 
 nmap -sS 192.168.20.10
 
-Results showed that all scanned ports were closed, indicating that no services were currently exposed on the server.
+At this earlier setup stage, Nmap reported the scanned TCP ports
+as closed. This result applies only to those ports at the time of
+the scan; it does not establish the absence of vulnerabilities
+or other exposed services.
 
-This demonstrates that even though the attacker can discover the host, the server is not currently exposing attackable services.
+Apache was installed later. The current validation confirms
+HTTP access on TCP/80.
 
 ![Nmap SYN Scan](screenshots/Nmap_port_scan_server.png)
 
