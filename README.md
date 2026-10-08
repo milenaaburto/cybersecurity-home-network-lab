@@ -28,6 +28,9 @@ final observed ruleset.
 See the [IP plan and interface mapping](diagrams/ip-addressing.md) for the
 VirtualBox implementation and the earlier Cisco Packet Tracer design.
 
+See the [VirtualBox topology](diagrams/virtualbox-topology.md) for network attachments
+and the [reproduction guide](docs/reproduce-tests.md) for commands and expected results.
+
 ## Validated Results
 
 | Test | Result | Supporting evidence |
@@ -73,5 +76,5 @@ screenshots and written analysis.
 - Results cover the tested paths and protocols, not every possible attack.
 - This version does not include centralized SIEM ingestion or automated alerting.
 
-Follow-up work includes a VirtualBox implementation diagram and a concise
-reproduction guide.
+The reproduction guide covers tests on a prepared lab; a fully automated fresh
+build is outside this version's scope.
