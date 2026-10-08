@@ -6,7 +6,7 @@ Validate the VirtualBox implementation against the security policy
 in `firewall-rules/security-policy.md`.
 
 This document records the revalidation of the lab after configuration
-troubleshooting. Earlier README sections describe previous setup stages;
+troubleshooting. The [setup history](setup-history.md) describes previous setup stages;
 their firewall commands should not be treated as the current ruleset.
 
 ## Validated Environment
@@ -73,8 +73,9 @@ Two evidence files were exported on Firewall-Router:
 | /home/netadmin/internal-deny-evidence.log | 9 |
 | /home/netadmin/tcp-deny-evidence.log | 10 |
 
-These files are currently stored on the VM; this document does not
-imply that the raw logs have been uploaded to the repository.
+Original copies are now published as [ICMP evidence](../logs/internal-deny-evidence.log)
+and [TCP evidence](../logs/tcp-deny-evidence.log).
+See the [evidence inventory](../logs/README.md) for provenance and limitations.
 
 The TCP test produced five logged SYN packets from Kali and five
 from the DMZ server, targeting 192.168.30.10:8080.
@@ -103,7 +104,7 @@ Apache's access log recorded the request with these fields:
 
 Four Kali access-log entries were exported to
 /home/webadmin/apache-kali-evidence.log on Ubuntu-Server.
-The raw export remains on the VM.
+An unchanged copy is published as [Apache evidence](../logs/apache-kali-evidence.log).
 
 This confirms application-level visibility of permitted HTTP traffic.
 The request was an authorized connectivity test, not evidence of
@@ -127,7 +128,7 @@ net.ipv4.ip_forward remained set to 1.
 - Results apply to the tested IPv4 paths and protocols.
 - Router INPUT and OUTPUT policies remain ACCEPT.
 - IPv6 filtering was not validated.
-- Earlier README NAT and Internet-access steps are historical;
+- Setup-history NAT and Internet-access steps are historical;
   forwarded Internet access was not revalidated in this configuration.
 - Ubuntu Server required recovery-mode troubleshooting earlier.
   A subsequent normal boot succeeded, but intermittent VM startup
