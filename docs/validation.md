@@ -118,7 +118,7 @@ LAB-INTERNAL-DENY logging rule.
 The FORWARD policy remained DROP, and
 net.ipv4.ip_forward remained set to 1.
 
-(../screenshots/firewall-persistence-after-reboot.png)
+![Firewall rules and forwarding after reboot](../screenshots/firewall-persistence-after-reboot.png)
 
 ## Scope and Remaining Limitations
 
