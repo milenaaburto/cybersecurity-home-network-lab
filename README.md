@@ -52,8 +52,9 @@ not treated as proof of firewall enforcement.
 - [Setup History](docs/setup-history.md): earlier configuration steps and
   troubleshooting, including historical rules that are no longer current.
 
-Raw log exports currently remain on the VMs. Repository evidence includes
-screenshots and written analysis; machine-readable exports are not yet published.
+Reviewed [original log extracts](logs/README.md) and the
+[exported IPv4 ruleset](firewall-rules/firewall-rules.v4) are available alongside
+screenshots and written analysis.
 
 ## Skills Demonstrated
 
@@ -72,5 +73,5 @@ screenshots and written analysis; machine-readable exports are not yet published
 - Results cover the tested paths and protocols, not every possible attack.
 - This version does not include centralized SIEM ingestion or automated alerting.
 
-Follow-up work includes publishing reviewed log extracts and the exported
-final ruleset, plus a concise reproduction guide.
+Follow-up work includes a VirtualBox implementation diagram and a concise
+reproduction guide.
