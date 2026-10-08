@@ -1,0 +1,110 @@
+# Network Segmentation Validation
+
+## Purpose
+
+Validate the VirtualBox implementation against the security policy
+in `firewall-rules/security-policy.md`.
+
+This document records the revalidation of the lab after configuration
+troubleshooting. Earlier README sections describe previous setup stages;
+their firewall commands should not be treated as the current ruleset.
+
+## Validated Environment
+
+| System | IPv4 address | Role |
+|---|---|---|
+| Kali Linux | 192.168.10.10 | Attacker network |
+| Ubuntu Server | 192.168.20.10 | DMZ Apache server |
+| Fedora | 192.168.30.10 | Internal workstation |
+
+The firewall provides the .1 gateway in each subnet:
+
+| Firewall interface | Network |
+|---|---|
+| enp0s10 | Attacker: 192.168.10.0/24 |
+| enp0s8 | DMZ: 192.168.20.0/24 |
+| enp0s9 | Internal: 192.168.30.0/24 |
+| enp0s3 | VirtualBox NAT uplink |
+
+The Cisco Packet Tracer topology represents the logical design.
+The interface names above belong to the VirtualBox implementation.
+
+## Current IPv4 Forwarding Policy
+
+- Default FORWARD policy: DROP.
+- Drop packets classified as INVALID.
+- Accept ESTABLISHED and RELATED traffic.
+- Allow new TCP connections from the attacker and internal networks
+  to 192.168.20.10 on port 80.
+- Log remaining traffic destined for the internal network using
+  the prefix `LAB-INTERNAL-DENY`.
+- Explicitly drop attacker-to-internal and DMZ-to-internal traffic.
+
+Logging is limited to 6 packets per minute with a burst of 10.
+This limits log volume, not enforcement. The LOG target does not
+drop packets; subsequent DROP rules enforce the restriction.
+
+## Test Results
+
+| Source | Destination | Test | Observed result |
+|---|---|---|---|
+| Kali | DMZ server | HTTP, TCP 80 | HTTP 200 |
+| Fedora | DMZ server | HTTP, TCP 80 | HTTP 200 |
+| Firewall | Fedora | ICMP | Replies received |
+| Kali | Fedora | ICMP | No replies; DROP counter increased |
+| DMZ server | Fedora | ICMP | No replies; DROP counter increased |
+| Firewall | Fedora | HTTP, TCP 8080 | HTTP 200: control test |
+| Kali | Fedora | TCP 8080 | Timeout, SYN logs and DROP counter increase |
+| DMZ server | Fedora | TCP 8080 | Timeout, SYN logs and DROP counter increase |
+
+A temporary Python HTTP server was bound to 192.168.30.10:8080
+for the TCP tests. The firewall's successful HTTP request confirmed
+that the service was available before testing the restricted paths.
+
+After testing, the temporary server was stopped.
+`ss -lnt 'sport = :8080'` showed no listening socket.
+
+## Log Analysis
+
+Two evidence files were exported on Firewall-Router:
+
+| Local file | Exported lines |
+|---|---|
+| /home/netadmin/internal-deny-evidence.log | 9 |
+| /home/netadmin/tcp-deny-evidence.log | 10 |
+
+These files are currently stored on the VM; this document does not
+imply that the raw logs have been uploaded to the repository.
+
+The TCP test produced five logged SYN packets from Kali and five
+from the DMZ server, targeting 192.168.30.10:8080.
+
+These packets include retransmissions from controlled connection
+attempts. They do not represent ten separate attacks.
+
+Timeouts alone would not establish firewall enforcement.
+The conclusion is supported by the service availability control,
+matching firewall logs, and increases in the corresponding DROP counters.
+
+## Persistence
+
+A firewall reboot confirmed persistence of interface addressing,
+IPv4 forwarding, and the six forwarding rules present before logging
+was added.
+
+The subsequent seven-rule configuration, including the LOG rule,
+was saved to /etc/iptables/rules.v4. Reboot persistence of this final
+version has not yet been tested.
+
+## Scope and Remaining Limitations
+
+- Results apply to the tested IPv4 paths and protocols.
+- Router INPUT and OUTPUT policies remain ACCEPT.
+- IPv6 filtering was not validated.
+- Earlier README NAT and Internet-access steps are historical;
+  forwarded Internet access was not revalidated in this configuration.
+- Ubuntu Server was accessible through recovery boot; reliable normal
+  startup remains unresolved.
+- Clock alignment across all VMs remains to be verified before
+  correlating timestamps from multiple systems.
+- These were authorized lab tests, not evidence of a real compromise.
