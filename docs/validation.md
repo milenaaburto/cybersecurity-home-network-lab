@@ -1,5 +1,11 @@
 # Network Segmentation Validation
 
+## Latest revalidation
+
+The [October 9 completion record](final-revalidation-2026-10-09.md) documents
+repeated HTTP, ICMP and TCP tests with before/after counters and service cleanup.
+The original evidence and historical observations below are preserved.
+
 ## Purpose
 
 Validate the VirtualBox implementation against the security policy
