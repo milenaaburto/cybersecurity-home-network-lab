@@ -1,7 +1,8 @@
 # Lab Evidence Exports
 
-These are original text extracts transferred from the lab VMs through a
-VirtualBox shared folder and published without editing their contents.
+The three original extracts listed below were transferred from the lab VMs
+through a VirtualBox shared folder and published without editing their contents.
+The later October 9 extract has MAC fields redacted as documented below.
 They record authorized connectivity tests, not a real incident.
 
 | File | Source | Records | Test |
@@ -51,7 +52,21 @@ This provenance differs from the three original log extracts listed above.
 
 ## October 9 revalidation
 
-A new ten-record TCP extract was saved on Firewall-Router and inspected through
-console screenshots. It has not yet been published here; publication approval
-is pending. See the [final revalidation record](../docs/final-revalidation-2026-10-09.md)
-for results, counter changes, evidence scope and operational follow-up.
+The [sanitized TCP extract](tcp-deny-revalidation-2026-10-09-sanitized.log)
+contains ten records: five SYN packets each from Kali and Ubuntu to the temporary
+Fedora service. Router-recorded times are 2026-10-09 20:00:05–20:00:09 and
+20:01:32–20:01:36 +00:00.
+
+The original was exported using journalctl -k -b --no-pager -o short-iso,
+filtered for LAB-INTERNAL-DENY and DPT=8080. The operator created a separate
+copy replacing every MAC field value with [REDACTED_MAC], then transferred that
+copy to Windows through a VirtualBox shared folder and supplied the actual file.
+This published file preserves the supplied sanitized text; it is not a screenshot
+transcription. The unredacted original remains on the router.
+
+Private lab IPs, timestamps, hostname, interfaces and TCP fields are retained
+with the operator's publication authorization. All ten MAC fields are redacted;
+no credentials or tokens were observed. Earlier published extracts are unchanged.
+
+See the [final revalidation record](../docs/final-revalidation-2026-10-09.md)
+for counter changes, interpretation limits and operational follow-up.
