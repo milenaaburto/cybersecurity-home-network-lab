@@ -4,7 +4,7 @@ The IPv4 segmentation and manual log-analysis objectives are complete for the te
 
 ## Evidence basis
 
-Results come from operator-provided console screenshots and explicit operator confirmations. They are point-in-time observations. The new raw log remains on the router and has not been published in this repository.
+Results come from operator-provided console screenshots and explicit operator confirmations. They are point-in-time observations. The original raw log remains on the router; a [MAC-redacted copy](../logs/tcp-deny-revalidation-2026-10-09-sanitized.log) is now published from the actual transferred file.
 
 ## Results
 
@@ -31,7 +31,7 @@ The operator exported ten TCP records and verified the count. Console inspection
 
 LOG records a packet and does not itself drop it. The enforcement conclusion combines the successful service control, client timeouts, matching DROP counter increases and corresponding logs. Ten records do not imply ten attacks.
 
-The new original export is retained on the router, pending publication approval. The existing published extracts remain unchanged. No precise inter-host clock offset or all-host synchronization was established; historical timestamp limitations remain applicable.
+The original export is retained on the router. The operator supplied and authorized publication of a separate copy with all ten MAC values replaced by [REDACTED_MAC]. It preserves the remaining recorded fields and is not a screenshot transcription. See the [evidence inventory](../logs/README.md) for provenance. The existing published extracts remain unchanged. No precise inter-host clock offset or all-host synchronization was established; historical timestamp limitations remain applicable.
 
 ## Startup and completion scope
 
@@ -39,6 +39,6 @@ The operator confirmed that VirtualBox was updated and that both affected VMs st
 
 Ubuntu synchronization after a normal startup is verified. The old NTP endpoint failure remains unexplained, and the configured replacement has no fallback.
 
-The scoped lab is complete with documented operational limitations. Remaining maintenance consists of startup observation, NTP dependency maintenance and publication of the new original log. IPv6 validation, router INPUT/OUTPUT hardening, centralized SIEM ingestion and automated alerting are outside this version.
+The scoped lab is complete with documented operational limitations. Remaining maintenance consists of startup observation and NTP dependency maintenance. IPv6 validation, router INPUT/OUTPUT hardening, centralized SIEM ingestion and automated alerting are outside this version.
 
 See [NTP recovery](ntp-recovery.md), [NTP issue #1](https://github.com/milenaaburto/cybersecurity-home-network-lab/issues/1), and [startup issue #2](https://github.com/milenaaburto/cybersecurity-home-network-lab/issues/2).
