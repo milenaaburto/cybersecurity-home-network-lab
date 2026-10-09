@@ -31,7 +31,8 @@ attachments before adapting the exported rules.
 - New TCP/80 connections from attacker and internal subnets to the DMZ server are allowed.
 - ESTABLISHED and RELATED return traffic is accepted.
 - Tested attacker-to-internal and DMZ-to-internal ICMP and TCP/8080 traffic is blocked.
-- Remaining forwarding defaults to DROP. The exported NAT table has no translation rules.
+- Remaining forwarding defaults to DROP.
+- Two scoped POSTROUTING MASQUERADE rules support Ubuntu-only DNS to 8.8.8.8 UDP/53 and NTP to 186.177.18.74 UDP/123 through enp0s3, with matching FORWARD exceptions. See [DNS/NTP recovery](../docs/ntp-recovery.md).
 - The NAT uplink serves the router; it does not provide general forwarded Internet access to the other VMs.
 - The router's own test traffic uses OUTPUT, not FORWARD. Its successful TCP/8080 request was a service availability control.
 
