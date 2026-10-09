@@ -11,13 +11,10 @@ generated deliberately, not discovered during a real incident.
 
 ## Findings
 
-| Source | Destination | Test | Observed result |
-| --- | --- | --- | --- |
-| Kali — 192.168.10.10 | DMZ — 192.168.20.10 | HTTP, TCP/80 | HTTP 200; Apache access entry |
-| Fedora — 192.168.30.10 | DMZ — 192.168.20.10 | HTTP, TCP/80 | HTTP 200 |
-| Kali — 192.168.10.10 | Fedora — 192.168.30.10 | ICMP | No replies; matching firewall drop counter increased |
-| DMZ — 192.168.20.10 | Fedora — 192.168.30.10 | ICMP | No replies; matching firewall drop counter increased |
-| Kali and DMZ | Fedora — 192.168.30.10 | TCP/8080 | Requests timed out; matching firewall logs and drop counters |
+The tested HTTP paths to the DMZ succeeded; the tested ICMP and TCP paths
+from Kali and Ubuntu to the internal workstation were blocked. See the
+[validation matrix](validation.md) and [October 9 counter measurements](final-revalidation-2026-10-09.md)
+for individual test results. This document focuses on interpretation.
 
 ## How the Evidence Was Evaluated
 
@@ -37,20 +34,52 @@ The temporary HTTP server was stopped after testing.
 
 ## Firewall Log Analysis
 
-The exported TCP evidence contained ten SYN log entries:
-five from Kali and five from Ubuntu-Server, directed to
-192.168.30.10:8080.
+The [October 9 sanitized export](../logs/tcp-deny-revalidation-2026-10-09-sanitized.log)
+contains ten SYN records: five from Kali and five from Ubuntu. Below is its
+first record, with line breaks added for readability only:
 
-Relevant fields included source and destination IP addresses,
-source and destination ports, ingress and egress interfaces,
-and TCP flags.
+```text
+2026-10-09T20:00:05+00:00 Firewall-Router kernel: LAB-INTERNAL-DENY
+IN=enp0s10 OUT=enp0s9 MAC=[REDACTED_MAC]
+SRC=192.168.10.10 DST=192.168.30.10 LEN=60 TOS=0x00 PREC=0x00
+TTL=63 ID=40798 DF PROTO=TCP SPT=45374 DPT=8080
+WINDOW=64240 RES=0x00 SYN URGP=0
+```
 
-Repeated SYN packets included connection retries. Ten log
-entries must not be interpreted as ten separate attacks.
+| Field | Interpretation |
+|---|---|
+| Timestamp and +00:00 | Router-recorded event time in UTC; timezone alone does not prove clock accuracy. |
+| Firewall-Router kernel | Host and component producing the record. |
+| LAB-INTERNAL-DENY | Configured LOG prefix, not a DROP verdict. |
+| IN=enp0s10 | Ingress interface for the attacker network. |
+| OUT=enp0s9 | Routed output interface toward the internal network, not proof of transmission. |
+| MAC=[REDACTED_MAC] | Link-layer identifiers removed from the publication copy. |
+| SRC / DST | Kali test host / Fedora internal workstation. |
+| LEN=60 | Logged IP packet length in bytes. |
+| TOS / PREC | Logged IP service/precedence values, both zero. |
+| TTL=63 | Remaining IP time-to-live; insufficient to identify the sender's operating system. |
+| ID=40798 / DF | IPv4 identification value and Don't Fragment flag. |
+| PROTO=TCP | Transport protocol. |
+| SPT=45374 / DPT=8080 | Client source port / temporary service destination port. |
+| WINDOW=64240 | Advertised TCP receive window field. |
+| RES=0x00 | Logged TCP reserved bits are zero. |
+| SYN | Connection initiation flag; does not establish a completed connection. |
+| URGP=0 | TCP urgent pointer value. |
 
-The LAB-INTERNAL-DENY prefix identifies the logging rule.
-Logging itself does not block traffic; the subsequent DROP
-rules enforce the policy.
+### What the evidence supports
+
+The router observed a TCP connection attempt from Kali to Fedora's test service.
+The service control returned HTTP 200; client attempts timed out, and the matching
+DROP counters increased by five per source. Together these observations support
+firewall enforcement for the tested paths.
+
+### What the evidence does not establish
+
+This line alone does not prove a drop, malicious intent, compromise or a completed
+connection. Repeated SYNs with the same endpoints and ports are consistent with
+retries; TCP sequence numbers are absent, so exact retransmission identification
+requires packet-level evidence. Ten records do not mean ten separate attacks.
+Rate-limited logging also prevents treating the extract as a complete packet history.
 
 ## Apache Log Analysis
 
@@ -83,8 +112,9 @@ any associated successful connections.
 
 ## Limitations
 
-- Ubuntu-Server clock synchronization remains unresolved.
-  Precise cross-host timestamp correlation was not established.
+- Router and Ubuntu synchronization was subsequently observed, including Ubuntu
+  after a normal startup. Original logs retain their historical clock limitations;
+  precise inter-host offset and all-host alignment were not established.
 - Firewall logging is rate-limited; logs are not a complete
   record of every dropped packet.
 - Results apply to the tested IPv4 paths and protocols.
