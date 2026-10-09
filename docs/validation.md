@@ -29,7 +29,7 @@ The firewall provides the .1 gateway in each subnet:
 The Cisco Packet Tracer topology represents the logical design.
 The interface names above belong to the VirtualBox implementation.
 
-## Current IPv4 Forwarding Policy
+## Segmentation Policy and Current Egress
 
 - Default FORWARD policy: DROP.
 - Drop packets classified as INVALID.
@@ -39,6 +39,8 @@ The interface names above belong to the VirtualBox implementation.
 - Log remaining traffic destined for the internal network using
   the prefix `LAB-INTERNAL-DENY`.
 - Explicitly drop attacker-to-internal and DMZ-to-internal traffic.
+- Later addition: permit Ubuntu-only DNS to 8.8.8.8 UDP/53 and NTP to
+  186.177.18.74 UDP/123, with matching NAT; see [follow-up](ntp-recovery.md).
 
 Logging is limited to 6 packets per minute with a burst of 10.
 This limits log volume, not enforcement. The LOG target does not
@@ -129,7 +131,8 @@ net.ipv4.ip_forward remained set to 1.
 - Router INPUT and OUTPUT policies remain ACCEPT.
 - IPv6 filtering was not validated.
 - Setup-history NAT and Internet-access steps are historical;
-  forwarded Internet access was not revalidated in this configuration.
+  general forwarded Internet access remains unavailable. Narrow DNS/NTP
+  exceptions were subsequently verified; see [follow-up](ntp-recovery.md).
 - Ubuntu Server required recovery-mode troubleshooting earlier.
   A subsequent normal boot succeeded, but intermittent VM startup
   problems remain unresolved.
@@ -137,7 +140,12 @@ net.ipv4.ip_forward remained set to 1.
   correlating timestamps from multiple systems.
 - These were authorized lab tests, not evidence of a real compromise.
 
-## Time Synchronization Limitation
+## Historical Time Synchronization Limitation
+
+**Update:** Router and Ubuntu synchronization has since been observed; see
+[DNS/NTP recovery](ntp-recovery.md). The following describes the original
+validation period and remains applicable to its unchanged log extracts.
+
 
 During validation, Firewall-Router reported a synchronized clock,
 while Ubuntu-Server reported an unsynchronized clock.
