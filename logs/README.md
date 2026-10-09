@@ -22,8 +22,10 @@ Firewall records show 2026-10-08 03:09:01–03:09:17 +00:00 for ICMP
 and 03:56:54–03:58:02 +00:00 for TCP. Apache records show
 08/Oct/2026 at 00:05:34, 02:31:32, 03:08:41 and 17:37:42 +0000.
 
-Timestamps are preserved as recorded. Ubuntu clock synchronization remains
-unresolved; these timestamps must not establish precise cross-host ordering.
+Timestamps are preserved as recorded. Ubuntu synchronization was unresolved
+when the original evidence was collected; these timestamps must not establish
+precise cross-host ordering. Synchronization was subsequently observed, including
+a normal Ubuntu startup; this does not retroactively validate historical clocks.
 Publication and export times are distinct from event timestamps.
 
 Repeated SYN records include retries and do not mean ten separate attacks.
@@ -43,5 +45,13 @@ No credentials or tokens were found in these extracts.
 
 The rules export is a later configuration snapshot, not a packet log.
 Its recorded counters are not the original test counter measurements.
-It retains the original export comments and counters; only its uploaded
-filename was normalized from firewall-rules.va to firewall-rules.v4.
+The current ruleset was transcribed from a complete console screenshot during
+the DNS/NTP follow-up; it is not a byte-verified transfer of the original export.
+This provenance differs from the three original log extracts listed above.
+
+## October 9 revalidation
+
+A new ten-record TCP extract was saved on Firewall-Router and inspected through
+console screenshots. It has not yet been published here; publication approval
+is pending. See the [final revalidation record](../docs/final-revalidation-2026-10-09.md)
+for results, counter changes, evidence scope and operational follow-up.
