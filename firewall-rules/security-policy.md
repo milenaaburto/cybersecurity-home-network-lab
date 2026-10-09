@@ -10,8 +10,8 @@ Protect the internal network by restricting access from untrusted and semi-trust
 - Allow Internal users to access DMZ services
 
 ## Security Rationale
-These rules reduce attack surface, prevent lateral movement,
-and enforce least-privilege network access.
+These rules reduce attack surface and opportunities for lateral movement,
+and restrict network access to the documented flows.
 
 ## VirtualBox Implementation Scope
 
@@ -37,3 +37,12 @@ paths and protocols, not prevention of every possible attack.
 
 See [validation results](../docs/validation.md) and
 [SOC analysis](../docs/soc-analysis.md).
+
+## DNS and NTP egress exceptions
+
+Ubuntu-Server (192.168.20.10) may initiate UDP/53 to 8.8.8.8 and UDP/123
+to 186.177.18.74 through enp0s8 -> enp0s3, with matching MASQUERADE rules.
+These two exceptions supplement the seven segmentation rules. General Internet
+access, TCP DNS, and alternate resolvers are not permitted by these exceptions.
+The numeric NTP endpoint requires maintenance if it becomes unavailable.
+See [configuration and verification](../docs/ntp-recovery.md).
