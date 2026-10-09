@@ -25,13 +25,14 @@ Results come from operator-provided console screenshots and explicit operator co
 
 Nine FORWARD rules were visible in the counter checks. NAT and IPv4 forwarding persistence remain supported by the earlier recovery record; they were not separately re-exported in this session.
 
-## Log interpretation
+## Evidence and interpretation
 
-The operator exported ten TCP records and verified the count. Console inspection showed five SYN records from Kali and five from Ubuntu to the temporary internal service. Repetition of the same endpoints and ports is consistent with retries; sequence numbers were not recorded, so packet-level retransmission identification is not claimed.
-
-LOG records a packet and does not itself drop it. The enforcement conclusion combines the successful service control, client timeouts, matching DROP counter increases and corresponding logs. Ten records do not imply ten attacks.
-
-The original export is retained on the router. The operator supplied and authorized publication of a separate copy with all ten MAC values replaced by [REDACTED_MAC]. It preserves the remaining recorded fields and is not a screenshot transcription. See the [evidence inventory](../logs/README.md) for provenance. The existing published extracts remain unchanged. No precise inter-host clock offset or all-host synchronization was established; historical timestamp limitations remain applicable.
+The [published sanitized TCP export](../logs/tcp-deny-revalidation-2026-10-09-sanitized.log)
+contains ten records from the actual transferred file, with MAC values redacted.
+The original export remains on the router. See the [evidence inventory](../logs/README.md)
+for collection and redaction details, and [SOC analysis](soc-analysis.md) for a
+field-by-field example and the reasoning behind the enforcement conclusion.
+Historical extracts remain unchanged; exact inter-host clock alignment was not established.
 
 ## Startup and completion scope
 
