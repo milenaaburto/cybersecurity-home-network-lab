@@ -3,8 +3,8 @@
 A VirtualBox lab demonstrating IPv4 network segmentation, firewall validation,
 and manual analysis of Linux firewall and Apache logs.
 
-**Status:** Core segmentation tests completed; operational limitations remain
-documented. All test traffic was generated in an authorized lab environment.
+**Status:** Scoped IPv4 segmentation and manual log-analysis lab completed and
+revalidated on October 9, 2026; operational follow-up remains documented. All test traffic was generated in an authorized lab environment.
 
 ## Objective
 
@@ -46,6 +46,9 @@ not treated as proof of firewall enforcement.
 
 ## Evidence and Analysis
 
+- [Final revalidation — October 9](docs/final-revalidation-2026-10-09.md): repeated
+  traffic tests, counter changes, cleanup and normal-start observations.
+
 - [Network Segmentation Validation](docs/validation.md): current policy, test
   results, screenshots, log-export inventory and persistence checks.
 - [SOC Analysis](docs/soc-analysis.md): evidence interpretation, analyst
@@ -69,10 +72,11 @@ screenshots and written analysis.
 
 ## Limitations and Follow-up
 
-- Router and Ubuntu now report NTP synchronization; Ubuntu reboot verification
-  remains pending. Historical logs retain their timestamp limitations.
+- Router and Ubuntu synchronization was observed; Ubuntu remained synchronized
+  after a confirmed normal startup. Historical logs retain their timestamp limitations.
   See [DNS/NTP recovery](docs/ntp-recovery.md).
-- Intermittent VM startup problems remain unresolved.
+- VirtualBox was updated according to the operator; one normal startup per
+  affected VM is confirmed. Intermittent startup reliability remains under observation.
 - IPv6 filtering was not validated; router INPUT and OUTPUT remain ACCEPT.
 - Results cover the tested paths and protocols, not every possible attack.
 - This version does not include centralized SIEM ingestion or automated alerting.
