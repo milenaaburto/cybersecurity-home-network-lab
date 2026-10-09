@@ -1,5 +1,15 @@
 # DNS/NTP recovery and boot follow-up
 
+## Latest status — October 9 daytime session
+
+Ubuntu reported synchronized time with NTP active after a normal startup.
+The operator confirmed normal starts for both affected VMs without recovery or
+GRUB edits following a VirtualBox update. One start per VM is confirmed; startup
+stability remains under observation. HTTP and segmentation tests were repeated.
+See [final revalidation](final-revalidation-2026-10-09.md).
+
+The sections below preserve the earlier recovery session and its then-pending checks.
+
 ## Verification scope — 2026-10-09 UTC
 
 This follow-up records observations from the October 8 evening session (UTC-6).
@@ -81,7 +91,7 @@ No host security setting was changed as part of this recovery.
 
 ## Remaining work
 
-- Verify Ubuntu time synchronization after a planned normal boot.
+- Completed in the later session: Ubuntu synchronization after a normal startup.
 - Establish reliable VM startup with a documented cause or bounded workaround.
 - Maintain the fixed NTP dependency and check time status before future captures.
 - Keep historical log timestamps unchanged; current synchronization does not
