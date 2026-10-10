@@ -1,66 +1,53 @@
 # Cybersecurity Home Network Lab
 
-A VirtualBox lab demonstrating IPv4 network segmentation, firewall validation,
-and manual analysis of Linux firewall and Apache logs.
+A VirtualBox lab that segments a network into attacker, DMZ and internal zones behind an Ubuntu iptables firewall, then proves the policy works with controlled tests and manual log analysis.
 
-**Status:** Scoped IPv4 segmentation and manual log-analysis lab completed and
-revalidated on October 9, 2026; operational follow-up remains documented. All test traffic was generated in an authorized lab environment.
+<!-- Add your topology image here, for example: -->
+<!-- ![Lab topology](diagrams/your-topology-image.png) -->
 
-## Objective
+## Summary
 
-Permit HTTP access to a DMZ web server while blocking tested connections from
-the attacker and DMZ networks to the internal workstation. Evaluate the
-results using service availability checks, firewall counters, and logs.
+- **What I built:** three isolated networks (Kali attacker, Ubuntu DMZ web server, Fedora internal workstation) routed through an Ubuntu firewall with stateful iptables rules and rate-limited logging.
+- **What I found:** HTTP to the DMZ worked. The tested ICMP and TCP/8080 connections to the internal host were blocked, and the DROP counters increased by five per source in the final revalidation.
+- **How I avoided a false conclusion:** a timeout alone is not proof of a block. I started a temporary service on the internal host, confirmed it answered (HTTP 200 from the router), and only then attributed the client timeouts to the firewall.
+- **What I did with the logs:** broke a firewall log record down field by field, reviewed Apache access logs, and wrote an analyst disposition covering what the evidence supports and what it does not.
+- **What's next:** centralized log collection and SIEM alerting, then Windows security event analysis. This version has no automated detection.
+
+All test traffic was generated in an authorized lab environment.
 
 ## Environment
 
-| System | Address | Role |
-|---|---|---|
-| Kali Linux | 192.168.10.10/24 | Attacker test host |
-| Ubuntu Server | 192.168.20.10/24 | DMZ web server running Apache |
-| Fedora | 192.168.30.10/24 | Internal workstation |
+| System                 | Address                   | Role                                    |
+| ---------------------- | ------------------------- | --------------------------------------- |
+| Kali Linux             | 192.168.10.10/24          | Attacker test host                      |
+| Ubuntu Server          | 192.168.20.10/24          | DMZ web server running Apache           |
+| Fedora                 | 192.168.30.10/24          | Internal workstation                    |
 | Ubuntu Firewall-Router | .1 gateway in each subnet | Routing, iptables filtering and logging |
 
-Each zone uses a separate VirtualBox internal network. Firewall-Router also
-has a VirtualBox NAT uplink. Only Ubuntu's explicitly scoped DNS and NTP
-egress is permitted; general forwarded Internet access is not enabled.
+Each zone uses a separate VirtualBox internal network. The router also has a NAT uplink, but only explicitly scoped DNS and NTP egress is permitted; general forwarded Internet access is not enabled.
 
-See the [IP plan and interface mapping](diagrams/ip-addressing.md) for the
-VirtualBox implementation and the earlier Cisco Packet Tracer design.
-
-See the [VirtualBox topology](diagrams/virtualbox-topology.md) for network attachments
-and the [reproduction guide](docs/reproduce-tests.md) for commands and expected results.
+Details: [IP plan](diagrams/ip-addressing.md) · [VirtualBox topology](diagrams/virtualbox-topology.md) · [Reproduction guide](docs/reproduce-tests.md)
 
 ## Validated Results
 
-| Test | Result | Supporting evidence |
-|---|---|---|
-| Kali and Fedora to DMZ TCP/80 | HTTP 200 | Client responses; Apache records for Kali |
-| Kali and DMZ to internal ICMP | Blocked in tested paths | No replies and increasing DROP counters |
-| Kali and DMZ to internal TCP/8080 | Blocked in tested paths | Timeouts, SYN logs and increasing DROP counters |
-| Router to temporary internal TCP/8080 service | HTTP 200 | Service availability control |
-| Firewall persistence | Original seven segmentation rules verified; later nine FORWARD and two NAT rules restored after boot recovery | [Follow-up](docs/ntp-recovery.md) |
+| Test                                          | Result                  | Supporting evidence                                  |
+| --------------------------------------------- | ----------------------- | ---------------------------------------------------- |
+| Kali and Fedora to DMZ TCP/80                 | HTTP 200                | Client responses; Apache records for Kali            |
+| Kali and DMZ to internal ICMP                 | Blocked in tested paths | No replies and increasing DROP counters              |
+| Kali and DMZ to internal TCP/8080             | Blocked in tested paths | Timeouts, SYN logs and increasing DROP counters      |
+| Router to temporary internal TCP/8080 service | HTTP 200                | Service availability control                         |
+| Firewall persistence                          | Rules restored after reboot | [Follow-up](docs/appendix/ntp-recovery.md)       |
 
-The temporary TCP/8080 service was stopped after testing. A timeout alone was
-not treated as proof of firewall enforcement.
+The temporary TCP/8080 service was stopped after testing.
 
 ## Evidence and Analysis
 
-- [Final revalidation — October 9](docs/final-revalidation-2026-10-09.md): repeated
-  traffic tests, counter changes, cleanup and normal-start observations.
-
-- [Network Segmentation Validation](docs/validation.md): current policy, test
-  results, screenshots, log-export inventory and persistence checks.
-- [SOC Analysis](docs/soc-analysis.md): evidence interpretation, analyst
-  disposition and investigation steps for similar activity outside a test.
-- [Security Policy](firewall-rules/security-policy.md): intended restrictions
-  and implementation scope.
-- [Setup History](docs/setup-history.md): earlier configuration steps and
-  troubleshooting, including historical rules that are no longer current.
-
-Reviewed [original log extracts](logs/README.md) and the
-[exported IPv4 ruleset](firewall-rules/firewall-rules.v4) are available alongside
-screenshots and written analysis.
+- [Final revalidation, October 9](docs/final-revalidation-2026-10-09.md): repeated tests, counter changes and cleanup.
+- [Network Segmentation Validation](docs/validation.md): policy, results, screenshots and persistence checks.
+- [SOC Analysis](docs/soc-analysis.md): how the evidence was interpreted, analyst disposition, and next steps if similar activity occurred outside a test.
+- [Security Policy](firewall-rules/security-policy.md): intended restrictions and scope.
+- [Original log extracts](logs/README.md) and the [exported IPv4 ruleset](firewall-rules/firewall-rules.v4).
+- [Setup history](docs/setup-history.md): earlier configuration and troubleshooting, including historical rules no longer in use.
 
 ## Skills Demonstrated
 
@@ -68,18 +55,13 @@ screenshots and written analysis.
 - Stateful iptables forwarding rules and rate-limited logging.
 - Positive and negative connectivity tests with a service availability control.
 - Manual interpretation of firewall and Apache logs.
-- Evidence-based conclusions and explicit documentation of uncertainty.
+- Evidence-based conclusions with explicit documentation of uncertainty.
 
-## Limitations and Follow-up
+## Limitations
 
-- Router and Ubuntu synchronization was observed; Ubuntu remained synchronized
-  after a confirmed normal startup. Historical logs retain their timestamp limitations.
-  See [DNS/NTP recovery](docs/ntp-recovery.md).
-- VirtualBox was updated according to the operator; one normal startup per
-  affected VM is confirmed. Intermittent startup reliability remains under observation.
-- IPv6 filtering was not validated; router INPUT and OUTPUT remain ACCEPT.
-- Results cover the tested paths and protocols, not every possible attack.
-- This version does not include centralized SIEM ingestion or automated alerting.
+- Results cover the tested IPv4 paths and protocols, not every possible attack.
+- IPv6 filtering was not validated, and router INPUT/OUTPUT policies remain ACCEPT.
+- Firewall logging is rate-limited, so the published extracts are not a complete packet history.
+- No centralized SIEM ingestion or automated alerting yet.
 
-The reproduction guide covers tests on a prepared lab; a fully automated fresh
-build is outside this version's scope.
+Operational notes (clock synchronization and intermittent VM startup) are in the [appendix](docs/appendix/ntp-recovery.md).
