@@ -48,6 +48,7 @@ The temporary TCP/8080 service was stopped after testing.
 - [Security Policy](firewall-rules/security-policy.md): intended restrictions and scope.
 - [Original log extracts](logs/README.md) and the [exported IPv4 ruleset](firewall-rules/firewall-rules.v4).
 - [Setup history](docs/setup-history.md): earlier configuration and troubleshooting, including historical rules no longer in use.
+-  [SIEM extension (work in progress)](docs/siem-lab.md).
 
 ## Skills Demonstrated
 
