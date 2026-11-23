@@ -11,7 +11,7 @@ A VirtualBox lab that segments a network into attacker, DMZ and internal zones b
 - **What I found:** HTTP to the DMZ worked. The tested ICMP and TCP/8080 connections to the internal host were blocked, and the DROP counters increased by five per source in the final revalidation.
 - **How I avoided a false conclusion:** a timeout alone is not proof of a block. I started a temporary service on the internal host, confirmed it answered (HTTP 200 from the router), and only then attributed the client timeouts to the firewall.
 - **What I did with the logs:** broke a firewall log record down field by field, reviewed Apache access logs, and wrote an analyst disposition covering what the evidence supports and what it does not.
-- **What's next:** centralized log collection and SIEM alerting, then Windows security event analysis. This version has no automated detection.
+- **SIEM extension:** Wazuh deployed with two agents and three tested detections on the firewall logs (see [SIEM lab](docs/siem-lab.md)). Next: DMZ web server logs and Windows event analysis.
 
 All test traffic was generated in an authorized lab environment.
 
@@ -63,6 +63,6 @@ The temporary TCP/8080 service was stopped after testing.
 - Results cover the tested IPv4 paths and protocols, not every possible attack.
 - IPv6 filtering was not validated, and router INPUT/OUTPUT policies remain ACCEPT.
 - Firewall logging is rate-limited, so the published extracts are not a complete packet history.
-- No centralized SIEM ingestion or automated alerting yet.
+- The base lab analysis is manual. Automated detection exists only in the SIEM extension, with thresholds tuned for the lab.
 
 Operational notes (clock synchronization and intermittent VM startup) are in the [appendix](docs/appendix/ntp-recovery.md).
