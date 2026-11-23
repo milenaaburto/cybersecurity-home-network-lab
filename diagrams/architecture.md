@@ -1,15 +1,5 @@
 # Network Architecture
 
-## Overview
-This lab simulates a small enterprise network with segmented security zones
-to practice defensive security and attack detection.
+The VirtualBox lab uses three routed IPv4 zones: an attacker test network, an Apache DMZ, and an internal workstation network. An Ubuntu firewall-router controls forwarded traffic. The Wazuh manager shares InternalNet with Fedora and has a separate host-only interface for dashboard access from Windows.
 
-## Zones
-- Attacker Zone: Simulates external threat activity
-- Firewall Zone: Enforces access control and segmentation
-- Internal Network: Protected endpoint assets
-- Monitoring Zone: Centralized visibility and log analysis
-
-## Security Objective
-Limit attack surface, control traffic flow, and validate defenses
-through simulated attacks.
+See the [implemented topology](virtualbox-topology.md), [forwarding policy](../firewall-rules/security-policy.md), and [Wazuh investigation](../docs/siem-lab.md).

@@ -6,7 +6,7 @@ New runs produce new timestamps and counters; preserve the published evidence.
 
 ## Prerequisites
 
-- Four running VMs with the [documented attachments and addresses](../diagrams/virtualbox-topology.md).
+- The four base-lab VMs with the [documented attachments and addresses](../diagrams/virtualbox-topology.md).
 - Apache installed on Ubuntu-Server; curl on Kali, Fedora and Firewall-Router.
 - Python 3 on Fedora for the temporary control service.
 - iptables and kernel-journal access on Firewall-Router.
@@ -130,7 +130,7 @@ Expected: no listening socket on port 8080.
 
 ## 5. Persistence and evidence
 
-Persistence was already verified in the [original validation](validation.md).
+Persistence was observed for the original policy and after DNS/NTP exceptions were added. See the [recovery record](appendix/ntp-recovery.md).
 On a fresh rebuild, save the intended rules using the installed persistence
 mechanism and verify after a planned clean reboot that all nine FORWARD rules, both NAT rules and
 IPv4 forwarding return. Do not infer persistence solely from a runtime export.
@@ -149,4 +149,4 @@ or a complete SOC detection pipeline. Router and Ubuntu now report synchronized
 clocks, but check all participating hosts before new captures. Historical logs
 retain their time limitations. Ubuntu synchronization after a normal startup
 was subsequently verified; see [final revalidation](final-revalidation-2026-10-09.md).
-See [DNS/NTP recovery](ntp-recovery.md).
+See [DNS/NTP recovery](appendix/ntp-recovery.md).

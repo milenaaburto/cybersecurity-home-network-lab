@@ -4,10 +4,8 @@
 Protect the internal network by restricting access from untrusted and semi-trusted zones.
 
 ## Rules Summary
-- Deny all traffic from External to Internal network
-- Allow HTTP traffic from External to DMZ
-- Deny DMZ-initiated traffic to Internal network
-- Allow Internal users to access DMZ services
+- Deny new forwarded traffic from the attacker and DMZ networks to InternalNet.
+- Allow new TCP/80 connections from the attacker and internal networks to the DMZ web server.
 
 ## Security Rationale
 These rules reduce attack surface and opportunities for lateral movement,
@@ -45,4 +43,4 @@ to 186.177.18.74 through enp0s8 -> enp0s3, with matching MASQUERADE rules.
 These two exceptions supplement the seven segmentation rules. General Internet
 access, TCP DNS, and alternate resolvers are not permitted by these exceptions.
 The numeric NTP endpoint requires maintenance if it becomes unavailable.
-See [configuration and verification](../docs/ntp-recovery.md).
+See [configuration and verification](../docs/appendix/ntp-recovery.md).

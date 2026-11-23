@@ -1,6 +1,6 @@
 # Final scoped revalidation — 2026-10-09
 
-The IPv4 segmentation and manual log-analysis objectives are complete for the tested paths. Operational follow-up remains open. This is not a SIEM deployment or a claim of permanently reliable VM startup.
+The IPv4 segmentation and manual log-analysis objectives are complete for the tested paths. Operational follow-up remains open. This record covers the October validation. See the [November Wazuh extension](siem-lab.md) for SIEM deployment and alert validation.
 
 ## Evidence basis
 
@@ -40,6 +40,6 @@ The operator confirmed that VirtualBox was updated and that both affected VMs st
 
 Ubuntu synchronization after a normal startup is verified. The old NTP endpoint failure remains unexplained, and the configured replacement has no fallback.
 
-The scoped lab is complete with documented operational limitations. Remaining maintenance consists of startup observation and NTP dependency maintenance. IPv6 validation, router INPUT/OUTPUT hardening, centralized SIEM ingestion and automated alerting are outside this version.
+The scoped lab is complete with documented operational limitations. Remaining maintenance consists of startup observation and NTP dependency maintenance. IPv6 validation and router INPUT/OUTPUT hardening remain outside the validated scope.
 
-See [NTP recovery](ntp-recovery.md), [NTP issue #1](https://github.com/milenaaburto/cybersecurity-home-network-lab/issues/1), and [startup issue #2](https://github.com/milenaaburto/cybersecurity-home-network-lab/issues/2).
+See [NTP recovery](appendix/ntp-recovery.md), [NTP issue #1](https://github.com/milenaaburto/cybersecurity-home-network-lab/issues/1), and [startup issue #2](https://github.com/milenaaburto/cybersecurity-home-network-lab/issues/2).

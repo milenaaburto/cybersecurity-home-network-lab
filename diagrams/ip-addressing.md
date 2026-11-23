@@ -18,7 +18,9 @@ mean that forwarded Internet access is permitted for lab hosts.
 
 See [current validation](../docs/validation.md) for tested behavior.
 
-## Router Interfaces
+The Wazuh manager uses `192.168.30.20/24` on InternalNet and a separate host-only adapter. See the [implemented topology](virtualbox-topology.md).
+
+## Packet Tracer router interfaces
 
 | Device | Interface | IP Address | Network |
 |------|----------|-----------|--------|
@@ -26,7 +28,7 @@ See [current validation](../docs/validation.md) for tested behavior.
 | R1 | G0/1 | 192.168.20.1 | DMZ |
 | R1 | G0/2 | 192.168.30.1 | Internal LAN |
 
-## End Devices
+## Packet Tracer end devices
 
 | Device | IP Address | Gateway | Network |
 |------|-----------|--------|--------|
