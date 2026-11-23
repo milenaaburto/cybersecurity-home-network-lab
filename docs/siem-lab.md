@@ -18,7 +18,7 @@ All test traffic was generated in an authorized lab environment.
 
 **Why InternalNet:** the Firewall-Router already uses all four VirtualBox adapters (NAT, DMZNet, InternalNet, AttackerNet), so a dedicated management network was not possible without changing the router. The SIEM therefore sits in the internal zone, behind the firewall, with no Internet access.
 
-<!-- Add your updated topology image here -->
+See the [VirtualBox topology](../diagrams/virtualbox-topology.md) for network placement and the dashboard access path.
 
 ## Deployment summary
 
@@ -26,8 +26,6 @@ All test traffic was generated in an authorized lab environment.
 2. Set a permanent static IP with systemd-networkd, matching the interface by MAC address. Verified after reboot.
 3. Installed both agents **offline**, because the internal zone has no Internet by design: downloaded the package on the host, verified its SHA-512, transferred it to the SIEM VM, served it temporarily over HTTP inside InternalNet, downloaded it on the target, and verified the SHA-512 again.
 4. Confirmed each connection in the agent log and in the dashboard.
-
-<!-- Screenshot: dashboard agent list showing both agents Active (hide any credentials) -->
 
 ## From iptables log line to alert
 
@@ -43,11 +41,11 @@ Rules are in [`siem/local_rules.xml`](../siem/local_rules.xml).
 
 | Rule | Level | Logic | MITRE ATT&CK |
 | --- | --- | --- | --- |
-| 100100 | 6 | A blocked connection toward the internal network was logged | none assigned |
-| 100101 | 10 | 5 matches of 100100 from the same source IP within 60 s | T1046 |
+| 100100 | 6 | A firewall event matched the internal-deny log prefix | none assigned |
+| 100101 | 10 | 5 matches of 100100 from the same source IP within 60 s | T1046 in shipped rule. Treat as repeated deny activity during triage. |
 | 100102 | 12 | 5 matches of 100100 from the same source IP within 60 s, with different destination ports | T1046 |
 
-The threshold of 5 is deliberate: the firewall's `LOG` rule is rate limited, so a threshold of 20 would never be reached.
+The threshold of five accounts for the firewall's rate-limited logging. Higher thresholds would be harder to reach in this lab.
 
 ## Tests
 
@@ -57,17 +55,24 @@ The threshold of 5 is deliberate: the firewall's `LOG` rule is rate limited, so 
 | Nmap SYN scan, ports 1-100, `-Pn` | Scan alert | All 100 ports reported `filtered`; 100102 fired twice |
 | 6 consecutive `curl` requests to the same port 8080 | Repeated-attempts alert, **not** scan alert | 100101 fired twice; 100102 did not fire |
 
-<!-- Screenshot: dashboard search rule.id:100102 -->
-<!-- Screenshot: dashboard search rule.id:(100101 or 100102) after the single-port test -->
+## November 23 alert investigation
 
-Observation: while the scan ran, only 100102 added alerts and 100101 did not add new ones. I have not investigated why Wazuh behaves this way, so I only record it.
+Source: [selected Wazuh alert records](../logs/wazuh-lab-alerts-2026-11-23.json). The export retains up to five recent records per rule and includes timestamps, rule metadata, and decoded network fields. All records show TCP from Kali (`192.168.10.10`) to Fedora (`192.168.30.10`). Times below are UTC on November 23, 2026.
+
+| Window | Observed in the export | Interpretation |
+| --- | --- | --- |
+| 00:35:24 | Two `100101` alerts with destination ports 23 and 71 | The repeated-attempt rule can also match across ports. |
+| 00:45:12 | Two level-12 `100102` alerts with destination ports 69 and 15 | Correlates with the operator-confirmed multi-port test. These records show the triggering events included in the export. |
+| 00:54:14–00:54:20 | Five `100100` alerts and two `100101` alerts for TCP/8080 | Correlates with the operator-confirmed single-port test. The selected records contain no `100102` for this window. A full-window query would verify that absence across the indexed alerts. |
+
+**Disposition:** Authorized detection validation for the two operator-confirmed test windows. The alerts establish rule matches. The [earlier segmentation revalidation](final-revalidation-2026-10-09.md) documents firewall enforcement using separate evidence, including counter changes and a service availability check.
 
 ## Analyst note (how I would triage these alerts)
 
 - **100100 alone:** one or two blocked attempts. Check source and destination against the policy. Usually a misconfiguration or a one-off probe.
 - **100101:** the same source keeps hitting a blocked path. Identify the source host and its owner, check what it is trying to reach, and look at its own logs for what is running there.
 - **100102:** one source touching many ports. Treat as reconnaissance. If the source is unexpected, escalate; if it is a known scanner or an authorized test, document and close.
-- In every case, the firewall dropped the traffic. The alert tells me someone tried, not that anything got through, so I would also confirm there are no *accepted* connections from the same source.
+- Check the matching firewall verdict or counter changes to corroborate enforcement, and look for any accepted connections from the same source.
 
 ## Troubleshooting notes
 
@@ -83,8 +88,8 @@ Observation: while the scan ran, only 100102 added alerts and 100101 did not add
 ## Limitations
 
 - Thresholds are tuned for this lab. A real environment needs tuning to reduce false positives (for example a user retrying a blocked connection could trigger 100101).
-- The firewall log is rate limited, so the SIEM sees a sample, not every packet. A slow scan that stays under the log rate could avoid the alerts.
-- Tests covered one source host and TCP SYN traffic only.
+- The firewall log is rate limited, so the SIEM sees a sample of the traffic. Correlation depends on how many matching events reach Wazuh within the configured window.
+- Correlation tests covered one source host and TCP traffic. The exported sample does not establish full-window alert counts.
 - Default credentials were used during setup and must be changed before any exposure.
 
 ## Next

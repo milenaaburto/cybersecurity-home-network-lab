@@ -6,7 +6,7 @@ Ubuntu reported synchronized time with NTP active after a normal startup.
 The operator confirmed normal starts for both affected VMs without recovery or
 GRUB edits following a VirtualBox update. One start per VM is confirmed; startup
 stability remains under observation. HTTP and segmentation tests were repeated.
-See [final revalidation](final-revalidation-2026-10-09.md).
+See [final revalidation](../final-revalidation-2026-10-09.md).
 
 The sections below preserve the earlier recovery session and its then-pending checks.
 
@@ -67,7 +67,7 @@ Ubuntu reached 192.168.20.1 with 3/3 ping replies.
 
 Rules were saved using netfilter-persistent. After the router's subsequent
 boot recovery, all nine FORWARD rules and both NAT rules were present.
-The [updated export](../firewall-rules/firewall-rules.v4) was generated at
+The [updated export](../../firewall-rules/firewall-rules.v4) was generated at
 05:00:07 UTC and transcribed from the complete console screenshot.
 Ubuntu itself has not yet passed a planned reboot test of this new configuration.
 The segmentation traffic tests were not repeated in this follow-up.

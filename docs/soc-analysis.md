@@ -124,8 +124,7 @@ any associated successful connections.
 - Intermittent VM boot problems remain an operational issue.
 - Published logs are selected extracts, not complete event histories.
   See the [evidence inventory](../logs/README.md) for sources and scope.
-- No centralized SIEM ingestion or automated alerting was
-  implemented in this exercise.
+- This analysis covers the original manual validation. See the [Wazuh extension](siem-lab.md) for subsequent centralized ingestion and alerting.
 
 ## Supporting Documentation
 

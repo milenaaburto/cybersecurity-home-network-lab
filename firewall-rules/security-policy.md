@@ -45,4 +45,4 @@ to 186.177.18.74 through enp0s8 -> enp0s3, with matching MASQUERADE rules.
 These two exceptions supplement the seven segmentation rules. General Internet
 access, TCP DNS, and alternate resolvers are not permitted by these exceptions.
 The numeric NTP endpoint requires maintenance if it becomes unavailable.
-See [configuration and verification](../docs/ntp-recovery.md).
+See [configuration and verification](../docs/appendix/ntp-recovery.md).

@@ -1,9 +1,7 @@
 # Cybersecurity Home Network Lab
 
-A VirtualBox lab that segments a network into attacker, DMZ and internal zones behind an Ubuntu iptables firewall, then proves the policy works with controlled tests and manual log analysis.
+A VirtualBox lab that segments a network into attacker, DMZ and internal zones behind an Ubuntu iptables firewall, then validates selected IPv4 paths with controlled tests, firewall counters, and log analysis. The Wazuh extension adds three custom detections.
 
-<!-- Add your topology image here, for example: -->
-<!-- ![Lab topology](diagrams/your-topology-image.png) -->
 
 ## Summary
 
@@ -11,7 +9,7 @@ A VirtualBox lab that segments a network into attacker, DMZ and internal zones b
 - **What I found:** HTTP to the DMZ worked. The tested ICMP and TCP/8080 connections to the internal host were blocked, and the DROP counters increased by five per source in the final revalidation.
 - **How I avoided a false conclusion:** a timeout alone is not proof of a block. I started a temporary service on the internal host, confirmed it answered (HTTP 200 from the router), and only then attributed the client timeouts to the firewall.
 - **What I did with the logs:** broke a firewall log record down field by field, reviewed Apache access logs, and wrote an analyst disposition covering what the evidence supports and what it does not.
-- **SIEM extension:** Wazuh deployed with two agents and three tested detections on the firewall logs (see [SIEM lab](docs/siem-lab.md)). Next: DMZ web server logs and Windows event analysis.
+- **SIEM extension:** Wazuh deployed with two agents and three tested detections on the firewall logs (see the [Wazuh alert investigation](docs/siem-lab.md#november-23-alert-investigation)). Next: DMZ web server logs and Windows event analysis.
 
 All test traffic was generated in an authorized lab environment.
 
@@ -48,7 +46,7 @@ The temporary TCP/8080 service was stopped after testing.
 - [Security Policy](firewall-rules/security-policy.md): intended restrictions and scope.
 - [Original log extracts](logs/README.md) and the [exported IPv4 ruleset](firewall-rules/firewall-rules.v4).
 - [Setup history](docs/setup-history.md): earlier configuration and troubleshooting, including historical rules no longer in use.
--  [SIEM extension (work in progress)](docs/siem-lab.md).
+- [Wazuh alert export](logs/wazuh-lab-alerts-2026-11-23.json) and [custom rules](siem/local_rules.xml).
 
 ## Skills Demonstrated
 

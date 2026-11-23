@@ -149,4 +149,4 @@ or a complete SOC detection pipeline. Router and Ubuntu now report synchronized
 clocks, but check all participating hosts before new captures. Historical logs
 retain their time limitations. Ubuntu synchronization after a normal startup
 was subsequently verified; see [final revalidation](final-revalidation-2026-10-09.md).
-See [DNS/NTP recovery](ntp-recovery.md).
+See [DNS/NTP recovery](appendix/ntp-recovery.md).

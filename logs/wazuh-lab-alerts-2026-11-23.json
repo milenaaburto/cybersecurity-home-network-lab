@@ -1,0 +1,173 @@
+{
+  "100100": [
+    {
+      "timestamp": "2026-11-23T00:54:14.356+0000",
+      "rule": {
+        "id": "100100",
+        "level": 6,
+        "description": "Lab firewall: connection toward the internal network was blocked and logged"
+      },
+      "network": {
+        "srcip": "192.168.10.10",
+        "dstip": "192.168.30.10",
+        "srcport": "52382",
+        "dstport": "8080",
+        "protocol": "TCP"
+      }
+    },
+    {
+      "timestamp": "2026-11-23T00:54:16.367+0000",
+      "rule": {
+        "id": "100100",
+        "level": 6,
+        "description": "Lab firewall: connection toward the internal network was blocked and logged"
+      },
+      "network": {
+        "srcip": "192.168.10.10",
+        "dstip": "192.168.30.10",
+        "srcport": "52396",
+        "dstport": "8080",
+        "protocol": "TCP"
+      }
+    },
+    {
+      "timestamp": "2026-11-23T00:54:16.370+0000",
+      "rule": {
+        "id": "100100",
+        "level": 6,
+        "description": "Lab firewall: connection toward the internal network was blocked and logged"
+      },
+      "network": {
+        "srcip": "192.168.10.10",
+        "dstip": "192.168.30.10",
+        "srcport": "52396",
+        "dstport": "8080",
+        "protocol": "TCP"
+      }
+    },
+    {
+      "timestamp": "2026-11-23T00:54:18.380+0000",
+      "rule": {
+        "id": "100100",
+        "level": 6,
+        "description": "Lab firewall: connection toward the internal network was blocked and logged"
+      },
+      "network": {
+        "srcip": "192.168.10.10",
+        "dstip": "192.168.30.10",
+        "srcport": "50412",
+        "dstport": "8080",
+        "protocol": "TCP"
+      }
+    },
+    {
+      "timestamp": "2026-11-23T00:54:20.397+0000",
+      "rule": {
+        "id": "100100",
+        "level": 6,
+        "description": "Lab firewall: connection toward the internal network was blocked and logged"
+      },
+      "network": {
+        "srcip": "192.168.10.10",
+        "dstip": "192.168.30.10",
+        "srcport": "50422",
+        "dstport": "8080",
+        "protocol": "TCP"
+      }
+    }
+  ],
+  "100101": [
+    {
+      "timestamp": "2026-11-23T00:35:24.475+0000",
+      "rule": {
+        "id": "100101",
+        "level": 10,
+        "description": "Lab firewall: repeated blocked attempts toward the internal network from the same source"
+      },
+      "network": {
+        "srcip": "192.168.10.10",
+        "dstip": "192.168.30.10",
+        "srcport": "57766",
+        "dstport": "23",
+        "protocol": "TCP"
+      }
+    },
+    {
+      "timestamp": "2026-11-23T00:35:24.520+0000",
+      "rule": {
+        "id": "100101",
+        "level": 10,
+        "description": "Lab firewall: repeated blocked attempts toward the internal network from the same source"
+      },
+      "network": {
+        "srcip": "192.168.10.10",
+        "dstip": "192.168.30.10",
+        "srcport": "57766",
+        "dstport": "71",
+        "protocol": "TCP"
+      }
+    },
+    {
+      "timestamp": "2026-11-23T00:54:14.354+0000",
+      "rule": {
+        "id": "100101",
+        "level": 10,
+        "description": "Lab firewall: repeated blocked attempts toward the internal network from the same source"
+      },
+      "network": {
+        "srcip": "192.168.10.10",
+        "dstip": "192.168.30.10",
+        "srcport": "52382",
+        "dstport": "8080",
+        "protocol": "TCP"
+      }
+    },
+    {
+      "timestamp": "2026-11-23T00:54:18.431+0000",
+      "rule": {
+        "id": "100101",
+        "level": 10,
+        "description": "Lab firewall: repeated blocked attempts toward the internal network from the same source"
+      },
+      "network": {
+        "srcip": "192.168.10.10",
+        "dstip": "192.168.30.10",
+        "srcport": "50412",
+        "dstport": "8080",
+        "protocol": "TCP"
+      }
+    }
+  ],
+  "100102": [
+    {
+      "timestamp": "2026-11-23T00:45:12.588+0000",
+      "rule": {
+        "id": "100102",
+        "level": 12,
+        "description": "Lab firewall: possible port scan, one source blocked on several different ports toward the internal network"
+      },
+      "network": {
+        "srcip": "192.168.10.10",
+        "dstip": "192.168.30.10",
+        "srcport": "34685",
+        "dstport": "69",
+        "protocol": "TCP"
+      }
+    },
+    {
+      "timestamp": "2026-11-23T00:45:12.639+0000",
+      "rule": {
+        "id": "100102",
+        "level": 12,
+        "description": "Lab firewall: possible port scan, one source blocked on several different ports toward the internal network"
+      },
+      "network": {
+        "srcip": "192.168.10.10",
+        "dstip": "192.168.30.10",
+        "srcport": "34685",
+        "dstport": "15",
+        "protocol": "TCP"
+      }
+    }
+  ]
+}

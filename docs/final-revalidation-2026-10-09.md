@@ -42,4 +42,4 @@ Ubuntu synchronization after a normal startup is verified. The old NTP endpoint 
 
 The scoped lab is complete with documented operational limitations. Remaining maintenance consists of startup observation and NTP dependency maintenance. IPv6 validation, router INPUT/OUTPUT hardening, centralized SIEM ingestion and automated alerting are outside this version.
 
-See [NTP recovery](ntp-recovery.md), [NTP issue #1](https://github.com/milenaaburto/cybersecurity-home-network-lab/issues/1), and [startup issue #2](https://github.com/milenaaburto/cybersecurity-home-network-lab/issues/2).
+See [NTP recovery](appendix/ntp-recovery.md), [NTP issue #1](https://github.com/milenaaburto/cybersecurity-home-network-lab/issues/1), and [startup issue #2](https://github.com/milenaaburto/cybersecurity-home-network-lab/issues/2).
