@@ -70,3 +70,7 @@ no credentials or tokens were observed. Earlier published extracts are unchanged
 
 See the [final revalidation record](../docs/final-revalidation-2026-10-09.md)
 for counter changes, interpretation limits and operational follow-up.
+
+## November Wazuh evidence
+
+The [Wazuh JSON export](wazuh-lab-alerts-2026-11-23.json) contains 11 selected records from three custom rules. See the [alert investigation](../docs/siem-lab.md#november-23-alert-investigation) for the UTC timeline and the dashboard and terminal evidence.

@@ -88,8 +88,7 @@ See the [evidence inventory](../logs/README.md) for provenance and limitations.
 The TCP test produced five logged SYN packets from Kali and five
 from the DMZ server, targeting 192.168.30.10:8080.
 
-These packets include retransmissions from controlled connection
-attempts. They do not represent ten separate attacks.
+Repeated SYNs are consistent with retries during controlled connection attempts. The extract contains ten packet records.
 
 Timeouts alone would not establish firewall enforcement.
 The conclusion is supported by the service availability control,
@@ -121,6 +120,8 @@ malicious activity. Cross-system clock alignment remains unverified.
 ![Apache access evidence](../screenshots/apache-kali-access-evidence.png)
 
 ## Persistence
+
+The capture below documents the initial seven-rule policy. The later [DNS/NTP follow-up](appendix/ntp-recovery.md) records the nine FORWARD rules and both NAT exceptions present after boot recovery.
 
 After rebooting Firewall-Router, verification confirmed that
 all seven FORWARD rules were restored, including the

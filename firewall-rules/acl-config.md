@@ -1,13 +1,5 @@
-# ACL Configuration
+# Logical ACL Design
 
-## PROTECT_INTERNAL
-Blocks traffic from External and DMZ networks to the Internal LAN.
+The Packet Tracer design calls for denying new connections from the attacker and DMZ zones to the internal network and permitting HTTP from the attacker zone to the DMZ web server.
 
-## EXTERNAL_TO_DMZ
-Allows HTTP traffic from External network to the DMZ server.
-Denies all other External-to-DMZ traffic.
-
-## Validation
-- External access to Internal: Blocked
-- External HTTP to DMZ: Allowed
-- DMZ lateral movement: Blocked
+See the [implemented IPv4 policy](security-policy.md) and [VirtualBox test results](../docs/validation.md) for the scope of the deployed rules and validation.

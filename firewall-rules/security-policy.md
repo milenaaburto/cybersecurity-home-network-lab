@@ -4,10 +4,8 @@
 Protect the internal network by restricting access from untrusted and semi-trusted zones.
 
 ## Rules Summary
-- Deny all traffic from External to Internal network
-- Allow HTTP traffic from External to DMZ
-- Deny DMZ-initiated traffic to Internal network
-- Allow Internal users to access DMZ services
+- Deny new forwarded traffic from the attacker and DMZ networks to InternalNet.
+- Allow new TCP/80 connections from the attacker and internal networks to the DMZ web server.
 
 ## Security Rationale
 These rules reduce attack surface and opportunities for lateral movement,

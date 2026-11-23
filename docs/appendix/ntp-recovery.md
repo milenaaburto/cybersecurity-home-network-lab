@@ -69,8 +69,7 @@ Rules were saved using netfilter-persistent. After the router's subsequent
 boot recovery, all nine FORWARD rules and both NAT rules were present.
 The [updated export](../../firewall-rules/firewall-rules.v4) was generated at
 05:00:07 UTC and transcribed from the complete console screenshot.
-Ubuntu itself has not yet passed a planned reboot test of this new configuration.
-The segmentation traffic tests were not repeated in this follow-up.
+At this point in the earlier session, Ubuntu had not yet undergone a normal startup check and segmentation tests had not been repeated. Both checks were subsequently recorded in the [October 9 revalidation](../final-revalidation-2026-10-09.md).
 
 ## Boot issue remains open
 

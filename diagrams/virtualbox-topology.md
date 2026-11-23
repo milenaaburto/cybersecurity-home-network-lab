@@ -25,6 +25,8 @@ flowchart TD
 | Kali | eth0 | Internal Network: AttackerNet | 192.168.10.10/24 | 192.168.10.1 |
 | Ubuntu-Server | enp0s8 | Internal Network: DMZNet | 192.168.20.10/24 | 192.168.20.1 |
 | Fedora | enp0s3 | Internal Network: InternalNet | 192.168.30.10/24 | 192.168.30.1 |
+| Wazuh manager | InternalNet adapter | Internal Network: InternalNet | 192.168.30.20/24 | — |
+| Wazuh manager | Host-only adapter | VirtualBox host-only network | 192.168.56.108 (observed) | — |
 
 Guest interface names may differ in a rebuilt VM. Verify their network
 attachments before adapting the exported rules.

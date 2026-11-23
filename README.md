@@ -2,14 +2,13 @@
 
 A VirtualBox lab that segments a network into attacker, DMZ and internal zones behind an Ubuntu iptables firewall, then validates selected IPv4 paths with controlled tests, firewall counters, and log analysis. The Wazuh extension adds three custom detections.
 
-
 ## Summary
 
 - **What I built:** three isolated networks (Kali attacker, Ubuntu DMZ web server, Fedora internal workstation) routed through an Ubuntu firewall with stateful iptables rules and rate-limited logging.
 - **What I found:** HTTP to the DMZ worked. The tested ICMP and TCP/8080 connections to the internal host were blocked, and the DROP counters increased by five per source in the final revalidation.
-- **How I avoided a false conclusion:** a timeout alone is not proof of a block. I started a temporary service on the internal host, confirmed it answered (HTTP 200 from the router), and only then attributed the client timeouts to the firewall.
+- **How I avoided a false conclusion:** a timeout alone is not proof of a block. I started a temporary service on the internal host, confirmed it answered (HTTP 200 from the router), then checked matching SYN logs and DROP counter increases before attributing the timeouts to firewall enforcement.
 - **What I did with the logs:** broke a firewall log record down field by field, reviewed Apache access logs, and wrote an analyst disposition covering what the evidence supports and what it does not.
-- **SIEM extension:** Wazuh deployed with two agents and three tested detections on the firewall logs (see the [Wazuh alert investigation](docs/siem-lab.md#november-23-alert-investigation)). Next: DMZ web server logs and Windows event analysis.
+- **SIEM extension:** Wazuh deployed with two agents and three tested detections on the firewall logs (see the [Wazuh alert investigation](docs/siem-lab.md#november-23-alert-investigation)).
 
 All test traffic was generated in an authorized lab environment.
 
@@ -20,9 +19,10 @@ All test traffic was generated in an authorized lab environment.
 | Kali Linux             | 192.168.10.10/24          | Attacker test host                      |
 | Ubuntu Server          | 192.168.20.10/24          | DMZ web server running Apache           |
 | Fedora                 | 192.168.30.10/24          | Internal workstation                    |
+| Wazuh manager          | 192.168.30.20/24          | Firewall alert collection and correlation |
 | Ubuntu Firewall-Router | .1 gateway in each subnet | Routing, iptables filtering and logging |
 
-Each zone uses a separate VirtualBox internal network. The router also has a NAT uplink, but only explicitly scoped DNS and NTP egress is permitted; general forwarded Internet access is not enabled.
+Each zone uses a separate VirtualBox internal network. The router also has a NAT uplink, but only explicitly scoped forwarded DNS and NTP egress from the DMZ web server is permitted; general forwarded Internet access is not enabled.
 
 Details: [IP plan](diagrams/ip-addressing.md) · [VirtualBox topology](diagrams/virtualbox-topology.md) · [Reproduction guide](docs/reproduce-tests.md)
 
@@ -55,6 +55,10 @@ The temporary TCP/8080 service was stopped after testing.
 - Positive and negative connectivity tests with a service availability control.
 - Manual interpretation of firewall and Apache logs.
 - Evidence-based conclusions with explicit documentation of uncertainty.
+
+## Project closure
+
+The October validation completed the scoped IPv4 segmentation and manual analysis. The November extension completed firewall alert collection and validation of three Wazuh rules. Follow-on work includes Apache ingestion, Windows event analysis, and host hardening.
 
 ## Limitations
 
